@@ -1148,235 +1148,242 @@ HighScoreScreen ENDP
 ; GAME SCREEN LAYOUT
 ; ============================================================
 GameScreenLayout PROC
-                          mov   paddle_x, 125
-                          mov   paddle_old_x, 125
-                          mov   score, 0
-                          mov   lives_count, 3
-                          mov   current_level, 1
-                          mov   bonus_active, 0
-                          mov   bonus_effect, 0
-                          mov   bonus_timer, 0
-                          mov   brick_break_count, 0
+    mov   paddle_x, 125
+    mov   paddle_old_x, 125
+    mov   score, 0
+    mov   lives_count, 3
+    mov   current_level, 1
+    mov   bonus_active, 0
+    mov   bonus_effect, 0
+    mov   bonus_timer, 0
+    mov   brick_break_count, 0
 
-                          mov   al, 00h
-                          call  FillScreen
+    mov   al, 00h
+    call  FillScreen
 
-                          mov   bx, 0
-                          mov   dx, 0
-                          mov   si, 320
-                          mov   di, 28
-                          mov   al, 05h
-                          call  FillRect
+    mov   bx, 0
+    mov   dx, 0
+    mov   si, 320
+    mov   di, 28
+    mov   al, 05h
+    call  FillRect
 
-                          mov   ch, 0Fh
-                          mov   bx, 1*8
-                          mov   dx, 4
-                          mov   si, OFFSET gs_scoreDisplayStr
-                          call  DrawString
-                          call  UpdateScoreString
-                          call  RefreshScoreHUD
+    mov   ch, 0Fh
+    mov   bx, 1*8
+    mov   dx, 4
+    mov   si, OFFSET gs_scoreDisplayStr
+    call  DrawString
+    call  UpdateScoreString
+    call  RefreshScoreHUD
 
-                          mov   ch, 0Fh
-                          mov   bx, 18*8
-                          mov   dx, 4
-                          mov   si, OFFSET gs_livesDisplayStr
-                          call  DrawString
-                          call  UpdateLivesDisplay
+    mov   ch, 0Fh
+    mov   bx, 18*8
+    mov   dx, 4
+    mov   si, OFFSET gs_livesDisplayStr
+    call  DrawString
+    call  UpdateLivesDisplay
 
-                          mov   ch, 0Fh
-                          mov   bx, 1*8
-                          mov   dx, 17
-                          mov   si, OFFSET gs_levelDisplayStr
-                          call  DrawString
+    mov   ch, 0Fh
+    mov   bx, 1*8
+    mov   dx, 17
+    mov   si, OFFSET gs_levelDisplayStr
+    call  DrawString
 
-                          mov   ch, 0Fh
-                          mov   bx, 18*8
-                          mov   dx, 17
-                          mov   si, OFFSET gs_player
-                          call  DrawString
-                          mov   ch, 0Fh
-                          mov   bx, 25*8
-                          mov   dx, 17
-                          mov   si, OFFSET gs_name
-                          call  DrawString
+    mov   ch, 0Fh
+    mov   bx, 18*8
+    mov   dx, 17
+    mov   si, OFFSET gs_player
+    call  DrawString
+    mov   ch, 0Fh
+    mov   bx, 25*8
+    mov   dx, 17
+    mov   si, OFFSET gs_name
+    call  DrawString
 
-                          mov   dx, 48
-                          mov   ch, 0
-  gs_rows:
-                          mov   bx, 10
-                          mov   cl, 0
-  gs_cols:
-                          mov   al, ch
-                          add   al, cl
-                          and   al, 03h
-                          cmp   al, 0
-                          je    gsc_mag
-                          cmp   al, 1
-                          je    gsc_dblue
-                          cmp   al, 2
-                          je    gsc_dmag
-                          mov   al, 03h
-                          jmp   gsc_draw
-  gsc_mag:
-                          mov   al, 0Dh
-                          jmp   gsc_draw
-  gsc_dblue:
-                          mov   al, 01h
-                          jmp   gsc_draw
-  gsc_dmag:
-                          mov   al, 05h
-  gsc_draw:
-                          mov   si, 18
-                          mov   di, 8
-                          call  FillRect
-                          add   bx, 20
-                          inc   cl
-                          cmp   cl, 15
-                          jl    gs_cols
-                          add   dx, 11
-                          inc   ch
-                          cmp   ch, 5
-                          jl    gs_rows
+    mov   dx, 48
+    mov   ch, 0
+    gs_rows:
+        mov   bx, 10
+        mov   cl, 0
+    gs_cols:
+        mov   al, ch
+        add   al, cl
+        and   al, 03h
+        cmp   al, 0
+        je    gsc_mag
+        cmp   al, 1
+        je    gsc_dblue
+        cmp   al, 2
+        je    gsc_dmag
+        mov   al, 03h
+        jmp   gsc_draw
+    gsc_mag:
+        mov   al, 0Dh
+        jmp   gsc_draw
+    gsc_dblue:
+        mov   al, 01h
+        jmp   gsc_draw
+    gsc_dmag:
+        mov   al, 05h
+    gsc_draw:
+        mov   si, 18
+        mov   di, 8
+        call  FillRect
+        add   bx, 20
+        inc   cl
+        cmp   cl, 15
+        jl    gs_cols
+        add   dx, 11
+        inc   ch
+        cmp   ch, 5
+        jl    gs_rows
 
-                          mov   cx, 75
-                          mov   si, OFFSET brick_state
-  gs_brick_reset:
-                          mov   BYTE PTR [si], 1
-                          inc   si
-                          loop  gs_brick_reset
+        mov   cx, 75
+        mov   si, OFFSET brick_state
+    gs_brick_reset:
+        mov   BYTE PTR [si], 1
+        inc   si
+        loop  gs_brick_reset
 
-                          mov   ax, paddle_x
-                          add   ax, 32
-                          mov   ball_x, ax
-                          mov   ball_y, 170
-                          mov   ball_dx, 1
-                          mov   ball_dy, -1
-                          mov   ball_launched, 0
+        mov   ax, paddle_x
+        add   ax, 32
+        mov   ball_x, ax
+        mov   ball_y, 170
+        mov   ball_dx, 1
+        mov   ball_dy, -1
+        mov   ball_launched, 0
 
-                          mov   bx, ball_x
-                          mov   dx, ball_y
-                          mov   si, 6
-                          mov   di, 6
-                          mov   al, 0Fh
-                          call  FillRect
-                          call  DrawPaddle
-                          call  PlayGameStart
+        mov   bx, ball_x
+        mov   dx, ball_y
+        mov   si, 6
+        mov   di, 6
+        mov   al, 0Fh
+        call  FillRect
+        call  DrawPaddle
+        call  PlayGameStart
 
-  gs_game_loop:
-                          in    al, 60h
-                          test  al, 80h
-                          jnz   gs_key_up
+    gs_game_loop:
+        in    al, 60h
+        test  al, 80h
+        jnz   gs_key_up
 
-                          cmp   al, 01h
-                          jne   no_gs_exit
-                          jmp   gs_exit
-  no_gs_exit:
-                          cmp   al, 39h
-                          je    gs_space
-                          cmp   al, 3Ch
-                          jne   gs_no_f2
-                          jmp   gs_skip_to_l2
-  gs_no_f2:
-                          cmp   al, 4Bh
-                          je    gs_do_left
-                          cmp   al, 1Eh
-                          je    gs_do_left
-                          cmp   al, 4Dh
-                          je    gs_do_right
-                          cmp   al, 20h
-                          je    gs_do_right
-                          jmp   gs_no_move
+        cmp   al, 01h
+        jne   no_gs_exit
+        jmp   gs_exit
+    no_gs_exit:
+        cmp   al, 39h
+        je    gs_space
+        cmp   al, 3Ch
+        jne   gs_no_f2
+        jmp   gs_skip_to_l2
+    gs_no_f2:
+        cmp   al, 3Dh
+        jne   gs_no_f3
+        cmp   current_level, 2
+        jne   gs_no_f3
+        call  TransitionToLevel3
+        jmp gs_no_move
+    gs_no_f3:
+        cmp   al, 4Bh
+        je    gs_do_left
+        cmp   al, 1Eh
+        je    gs_do_left
+        cmp   al, 4Dh
+        je    gs_do_right
+        cmp   al, 20h
+        je    gs_do_right
+        jmp   gs_no_move
 
-  gs_key_up:
-                          jmp   gs_no_move
+    gs_key_up:
+        jmp   gs_no_move
 
-  gs_space:
-                          cmp   ball_launched, 0
-                          je    skip_gs_no_move
-                          jmp   gs_no_move
-  skip_gs_no_move:
-                          mov   ball_launched, 1
-                          jmp   gs_no_move
+    gs_space:
+        cmp   ball_launched, 0
+        je    skip_gs_no_move
+        jmp   gs_no_move
+    skip_gs_no_move:
+        mov   ball_launched, 1
+        jmp   gs_no_move
 
-  gs_do_left:
-                          mov   bx, paddle_x
-                          sub   bx, paddle_speed
-                          cmp   bx, 2
-                          jge   gs_apply_move
-                          mov   bx, 2
-                          jmp   gs_apply_move
+    gs_do_left:
+        mov   bx, paddle_x
+        sub   bx, paddle_speed
+        cmp   bx, 2
+        jge   gs_apply_move
+        mov   bx, 2
+        jmp   gs_apply_move
 
-  gs_do_right:
-                          mov   bx, paddle_x
-                          add   bx, paddle_speed
-                          mov   ax, 318
-                          sub   ax, paddle_width
-                          cmp   bx, ax
-                          jle   gs_apply_move
-                          mov   bx, ax
+    gs_do_right:
+        mov   bx, paddle_x
+        add   bx, paddle_speed
+        mov   ax, 318
+        sub   ax, paddle_width
+        cmp   bx, ax
+        jle   gs_apply_move
+        mov   bx, ax
 
-  gs_apply_move:
-                          cmp   bx, paddle_x
-                          je    gs_no_move
-                          call  ClearPaddle
-                          cmp   ball_launched, 0
-                          jne   gs_move_paddle_only
-                          push  bx
-                          mov   bx, ball_x
-                          mov   dx, ball_y
-                          mov   si, 6
-                          mov   di, 6
-                          mov   al, 00h
-                          call  FillRect
-                          pop   bx
-                          mov   ax, bx
-                          add   ax, 32
-                          mov   ball_x, ax
+    gs_apply_move:
+        cmp   bx, paddle_x
+        je    gs_no_move
+        call  ClearPaddle
+        cmp   ball_launched, 0
+        jne   gs_move_paddle_only
+        push  bx
+        mov   bx, ball_x
+        mov   dx, ball_y
+        mov   si, 6
+        mov   di, 6
+        mov   al, 00h
+        call  FillRect
+        pop   bx
+        mov   ax, bx
+        add   ax, 32
+        mov   ball_x, ax
 
-  gs_move_paddle_only:
-                          mov   paddle_x, bx
-                          call  DrawPaddle
-                          cmp   ball_launched, 0
-                          jne   gs_skip_fallthrough
-                          cmp   ball_y, 48
-                          jge   gs_draw_ball_safe
-                          mov   ball_y, 170
-  gs_draw_ball_safe:
-                          mov   bx, ball_x
-                          mov   dx, ball_y
-                          mov   si, 6
-                          mov   di, 6
-                          mov   al, 0Fh
-                          call  FillRect
+    gs_move_paddle_only:
+        mov   paddle_x, bx
+        call  DrawPaddle
+        cmp   ball_launched, 0
+        jne   gs_skip_fallthrough
+        cmp   ball_y, 48
+        jge   gs_draw_ball_safe
+        mov   ball_y, 170
+    gs_draw_ball_safe:
+        mov   bx, ball_x
+        mov   dx, ball_y
+        mov   si, 6
+        mov   di, 6
+        mov   al, 0Fh
+        call  FillRect
 
-  gs_skip_fallthrough:
-                          jmp   gs_no_move
+    gs_skip_fallthrough:
+        jmp   gs_no_move
 
-  gs_skip_to_l2:
-                          call  TransitionToLevel2
-                          jmp   gs_no_move
+    gs_skip_to_l2:
+        call  TransitionToLevel2
+        jmp   gs_no_move
 
-  gs_no_move:
-                          cmp   ball_launched, 0
-                          je    gs_skip_bonus_too
-                          call  MoveBall
-  gs_skip_bonus_too:
-                          call  UpdateBonus
-                          call  TickBonusTimer
+    gs_no_move:
+        cmp   ball_launched, 0
+        je    gs_skip_bonus_too
+        call  MoveBall
+    gs_skip_bonus_too:
+        call  UpdateBonus
+        call  TickBonusTimer
 
-  gs_delay:
-                          mov   cx, ball_speed
-  gs_delay_lp:
-                          push  cx
-                          mov   cx, 10000
-  gs_delay_in:
-                          loop  gs_delay_in
-                          pop   cx
-                          loop  gs_delay_lp
-                          jmp   gs_game_loop
+    gs_delay:
+        mov   cx, ball_speed
+    gs_delay_lp:
+        push  cx
+        mov   cx, 10000
+    gs_delay_in:
+        loop  gs_delay_in
+        pop   cx
+        loop  gs_delay_lp
+        jmp   gs_game_loop
 
-  gs_exit:
-                          ret
+    gs_exit:
+        ret
 GameScreenLayout ENDP
 
 
@@ -1766,19 +1773,25 @@ MoveBall PROC
                           cmp   current_level, 2
                           jne   mbh_chk_l3_state
                           cmp   brick_state2[si], 1
-                          jne   mb_paddleCollision
+                          je noJmp
+                          jmp   mb_paddleCollision
+                          noJmp :
                           mov   brick_state2[si], 0
                           jmp   mbh_do_erase
   mbh_chk_l3_state:
                           cmp   current_level, 3
                           jne   mbh_chk_l1_state
                           cmp   brick_state3[si], 1
-                          jne   mb_paddleCollision
+                          je noJmp_l3 
+                          jmp   mb_paddleCollision
+                          noJmp_l3 :
                           mov   brick_state3[si], 0
                           jmp   mbh_do_erase
   mbh_chk_l1_state:
                           cmp   brick_state[si], 1
-                          jne   mb_paddleCollision
+                          je noJmp_l1
+                          jmp   mb_paddleCollision
+                          noJmp_l1 :
                           mov   brick_state[si], 0
 
   mbh_do_erase:
@@ -3697,7 +3710,9 @@ LevelCompleteScreen PROC
                           mov   ah, 00h
                           int   16h
                           cmp   al, 27
-                          je    ws_exit
+                          jne noJmp_ws_exit
+                          jmp    ws_exit
+                          noJmp_ws_exit:
                           cmp   al, 13
                           je    ws_enter
                           jmp   ws_wait
