@@ -3,7 +3,7 @@
 ## A Complete DOS Gaming Experience Built in x86 Assembly
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ![MASM](https://img.shields.io/badge/MASM-6.11-blue)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ![Platform](https://img.shields.io/badge/Platform-DOSBox-orange)
@@ -112,6 +112,9 @@ The game features **3 progressive levels**, real-time ball physics, collision de
 </div>
 
 ---
+# 🎬 Documentation 
+
+   For gameflow and detailed documentation check out the Brick_Bricker_Documentation.pdf added in the repo.
 
 # 👥 Team Members
 
